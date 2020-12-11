@@ -1,6 +1,7 @@
 package agenda;
 
 import java.time.*;
+import java.util.ArrayList;
 
 public class Event {
 
@@ -40,8 +41,24 @@ public class Event {
      * @return true if the event occurs on that day, false otherwise
      */
     public boolean isInDay(LocalDate aDay) {
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        ArrayList<LocalDate> dureeEvent=new ArrayList();
+
+        int year=myStart.getYear();
+        int month=myStart.getMonthValue();
+        int dayOfMonth=myStart.getDayOfMonth();
+        
+
+        LocalDate date=LocalDate.of(year,month,dayOfMonth);
+        long duree=myDuration.toDays();
+        for(long i=0;i<duree;i++){
+            date=date.plusDays(i);
+            dureeEvent.add(date);
+            }
+        if(dureeEvent.contains(aDay)){
+            return true;}
+        return false;
+            
+        
     }
    
     /**
