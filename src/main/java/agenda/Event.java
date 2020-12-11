@@ -1,6 +1,8 @@
 package agenda;
 
 import java.time.*;
+import java.time.chrono.ChronoLocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class Event {
@@ -41,24 +43,29 @@ public class Event {
      * @return true if the event occurs on that day, false otherwise
      */
     public boolean isInDay(LocalDate aDay) {
-        ArrayList<LocalDate> dureeEvent=new ArrayList();
-
+        return (aDay.isEqual(ChronoLocalDate.from(this.myStart)) 
+                || aDay.isEqual(ChronoLocalDate.from(this.myStart.plus(this.myDuration))) 
+                || (aDay.isAfter(ChronoLocalDate.from(this.myStart)) 
+                    && aDay.isBefore(ChronoLocalDate.from(this.myStart.plus(this.myDuration)))));
+        
+        /*ArrayList<LocalDate> dureeEvent=new ArrayList();
         int year=myStart.getYear();
         int month=myStart.getMonthValue();
         int dayOfMonth=myStart.getDayOfMonth();
-        
+        long hours=myStart.getHour();
+        long minutes=myStart.getMinute();
 
         LocalDate date=LocalDate.of(year,month,dayOfMonth);
-        long duree=myDuration.toDays();
-        for(long i=0;i<duree;i++){
-            date=date.plusDays(i);
-            dureeEvent.add(date);
-            }
-        if(dureeEvent.contains(aDay)){
-            return true;}
-        return false;
-            
+        date.isBefore(date.plus(myDuration));
+        dureeEvent.add(date);
+        long duree=myDuration.toMinutes();
+        date=date.plus(duree,ChronoUnit.MINUTES);
+        dureeEvent.add(date);
         
+        if(dureeEvent.contains(aDay)){
+            return true;
+        }
+        return false;*/
     }
    
     /**
@@ -83,6 +90,12 @@ public class Event {
         return myDuration;
     }
 
-   
-    
+   /**
+    * @return String
+    * renvois un affichage propre d'un Event
+    */
+    @Override
+    public String toString(){
+        return this.myTitle+" = {"+this.myStart+", "+this.myDuration+"}";
+    }
 }

@@ -10,7 +10,9 @@ import java.time.temporal.ChronoUnit;
  * a given number of occurrences
  */
 public class FixedTerminationEvent extends RepetitiveEvent {
-
+    
+    private LocalDate terminationInclusive;
+    private long numberOfOccurrences;
     
     /**
      * Constructs a fixed terminationInclusive event ending at a given date
@@ -28,8 +30,26 @@ public class FixedTerminationEvent extends RepetitiveEvent {
      */
     public FixedTerminationEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency, LocalDate terminationInclusive) {
          super(title, start, duration, frequency);
-      
-
+         this.terminationInclusive=terminationInclusive;
+         long compteur = 0;
+         LocalDate ldStart = start.toLocalDate();
+         while (ldStart.isBefore(terminationInclusive)){
+             switch (frequency){
+                case DAYS:
+                    ldStart=ldStart.plusDays(1);
+                    compteur++;
+                    break;
+                case WEEKS:
+                    ldStart=ldStart.plusWeeks(1);
+                    compteur++;
+                    break;
+                case MONTHS:
+                    ldStart=ldStart.plusMonths(1);
+                    compteur++;
+                    break;
+            }
+         }
+         this.numberOfOccurrences=compteur;
     }
 
     /**
@@ -48,7 +68,8 @@ public class FixedTerminationEvent extends RepetitiveEvent {
      */
     public FixedTerminationEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency, long numberOfOccurrences) {
         super(title, start, duration, frequency);
-        
+        this.numberOfOccurrences=numberOfOccurrences;
+        this.terminationInclusive = (start.plus(numberOfOccurrences-1, frequency)).toLocalDate();
     }
 
     /**
@@ -56,11 +77,11 @@ public class FixedTerminationEvent extends RepetitiveEvent {
      * @return the termination date of this repetitive event
      */
     public LocalDate getTerminationDate() {
-        return LocalDate.now();
+        return this.terminationInclusive;
     }
 
     public long getNumberOfOccurrences() {
-       return 2;
+        return this.numberOfOccurrences;
     }
         
 }
